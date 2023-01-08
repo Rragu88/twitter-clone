@@ -1,5 +1,36 @@
 import { tweetsData } from './data.js';
 
+const tweetInput = document.getElementById('tweet-input');
+const tweetBtn = document.getElementById('tweet-btn');
+
+document.addEventListener('click', (e) => {
+    if (e.target.dataset.comment) {
+        console.log(e.target.dataset.comment);
+    } else if (e.target.dataset.like) {
+        handleLikeClick(e.target.dataset.like);
+    } else if (e.target.dataset.retweet){
+        console.log(e.target.dataset.retweet);
+    }
+});
+
+tweetBtn.addEventListener('click', () => {
+    console.log(tweetInput.value);
+});
+
+function handleLikeClick(tweetId) {
+    const targetTweetObj = tweetsData.filter((tweet) => {
+        return tweet.uuid === tweetId;
+    })[0];
+
+    if (targetTweetObj.isLiked) {
+        targetTweetObj.likes--;
+    } else {
+        targetTweetObj.likes++;
+    }
+    targetTweetObj.isLiked = !targetTweetObj.isLiked;
+    render();
+}
+
 function getFeedHtml(tweets) {
     let feedHtml = ``;
     tweets.forEach((tweet) => {
@@ -32,17 +63,7 @@ function getFeedHtml(tweets) {
 }
 
 function render() {
-    const tweetInput = document.getElementById('tweet-input');
-    const tweetBtn = document.getElementById('tweet-btn');
-    tweetBtn.addEventListener('click', () => {
-        console.log(tweetInput.value);
-    });
     document.getElementById('feed').innerHTML = getFeedHtml(tweetsData);
-    document.addEventListener('click', (e) => {
-        if (e.target.dataset.like) {
-            console.log(e.target.dataset.like);
-        }
-    });
 }
 
 render();
